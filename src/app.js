@@ -20,7 +20,9 @@ app.get("/mario/:id", async (req, res) => {
   try {
     let result = await marioModel.findOne({ _id: req.params.id });
     if (isNoU(result)) {
-      throw Error;
+      res.status(400).send({
+          message:"id not found",
+      })
     } else {
       res.send(result);
     }
@@ -64,12 +66,16 @@ app.delete("/mario/:id", async (req,res) => {
     try{
         let d = await marioModel.findOne({_id:req.params.id});
         if(isNoU(d)){
-            throw Error;
-        }
-        await marioModel.deleteOne({_id:req.params.id});
+            res.status(400).send({
+                message:"id not found",
+            })
+        }else{
+            await marioModel.deleteOne({_id:req.params.id});
         res.send({
             message:"character deleted",
         })
+        }
+        
     } catch(er){
         res.status(400).send({
             message:er.message,
