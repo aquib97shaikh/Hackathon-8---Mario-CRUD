@@ -20,7 +20,7 @@ app.get("/mario/:id", async (req, res) => {
   try {
     res.send(await marioModel.findById(req.params.id));
     }
-  catch (er) {
+  catch(er) {
     res.status(400).send({ message: er.message });
   }
 }
@@ -51,7 +51,7 @@ app.patch("/mario/:id", async (req, res) => {
         await result.save();
         res.send(result);
       }
-    } catch (er) {
+    } catch(er) {
       res.status(400).send({ message: er.message });
     }
   });
@@ -63,7 +63,7 @@ app.delete("/mario/:id", async (req, res) => {
     res.send({
       message: "character deleted",
     });
-  } catch (er) {
+  } catch(er) {
     res.status(400).send({
       message: er.message,
     });
