@@ -18,31 +18,24 @@ app.get("/mario", async (req,res) =>{
 
 app.get("/mario/:id", async (req, res) => {
   try {
-    let result = await marioModel.findOne({ _id: req.params.id });
-    if (isNoU(result)) {
-      res.status(400).send({
-          message:"id not found",
-      })
-    } else {
-      res.send(result);
+    res.send(await marioModel.findById(req.params.id));
     }
-  } catch (er) {
+  catch (er) {
     res.status(400).send({ message: er.message });
   }
-});
+}
+);
 const isNoU = (i) => i===null || i===undefined
 app.post("/mario",async (req,res)=>{
     let {name, weight} = req.body;
     
-    if (!(isNoU(name)  || isNoU(weight))){
-        let newObj = {name,weight};
-        let newMario = new marioModel(newObj);
-        await newMario.save(); 
-    
-        res.status(201).send(newMario);
+    if (!(isNoU(name) || isNoU(weight))) {
+      let newMario = new marioModel({ name, weight });
+      await newMario.save();
 
-    }else{
-        res.status(400).send({message:'either name or weight is missing'})   
+      res.status(201).send(newMario);
+    } else {
+      res.status(400).send({ message: "either name or weight is missing" });
     }
 })
 app.patch("/mario/:id", async (req, res) => {
@@ -50,8 +43,8 @@ app.patch("/mario/:id", async (req, res) => {
       let {name,weight} = req.body;
       let result = await marioModel.findOne({ _id: req.params.id });
       console.log(result);
-      if (isNoU(result)|| (isNoU(name) && isNoU(weight))) {
-        res.status(400).send({message:"id not found"});
+      if ((isNoU(name) && isNoU(weight))) {
+        res.status(400).send({message:"both name and weight are missing"});
       } else {
         result.weight = weight ?? result.weight;
         result.name = name ?? result.name;
