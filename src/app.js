@@ -19,7 +19,7 @@ app.get("/mario", async (req,res) =>{
 app.get("/mario/:id", async (req, res) => {
   try {
     let result = await marioModel.findOne({ _id: req.params.id });
-    if (result === null) {
+    if (isNoU(result)) {
       throw Error;
     } else {
       res.send(result);
@@ -48,7 +48,7 @@ app.patch("/mario/:id", async (req, res) => {
       let {name,weight} = req.body;
       let result = await marioModel.findOne({ _id: req.params.id });
       console.log(result);
-      if (result === null || (isNoU(name) && isNoU(weight))) {
+      if (isNoU(result)|| (isNoU(name) && isNoU(weight))) {
         res.status(400).send({message:"id not found"});
       } else {
         result.weight = weight ?? result.weight;
@@ -63,6 +63,9 @@ app.patch("/mario/:id", async (req, res) => {
 app.delete("/mario/:id", async (req,res) => {
     try{
         let d = await marioModel.findOne({_id:req.params.id});
+        if(isNoU(d)){
+            throw Error;
+        }
         await marioModel.deleteOne({_id:req.params.id});
         res.send({
             message:"character deleted",
