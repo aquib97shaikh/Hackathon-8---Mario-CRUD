@@ -55,24 +55,18 @@ app.patch("/mario/:id", async (req, res) => {
       res.status(400).send({ message: er.message });
     }
   });
-app.delete("/mario/:id", async (req,res) => {
-    try{
-        let d = await marioModel.findOne({_id:req.params.id});
-        if(isNoU(d)){
-            res.status(400).send({
-                message:"id not found",
-            })
-        }else{
-            await marioModel.deleteOne({_id:req.params.id});
-        res.send({
-            message:"character deleted",
-        })
-        }
-        
-    } catch(er){
-        res.status(400).send({
-            message:er.message,
-        })
-    }
-})
+app.delete("/mario/:id", async (req, res) => {
+  try {
+    let d = await marioModel.findById(req.params.id);
+
+    await marioModel.deleteOne({ _id: req.params.id });
+    res.send({
+      message: "character deleted",
+    });
+  } catch (er) {
+    res.status(400).send({
+      message: er.message,
+    });
+  }
+});
 module.exports = app;
